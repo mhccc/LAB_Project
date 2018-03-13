@@ -15,9 +15,7 @@ def extract(scope):
     return {'operator':scope[:2], 'operand':scope[2]}
 
 #MongoDB에서 키워드셋 추출
-def create_keyword_list():
-    #임의의 자가진단결과
-    survey_string = '000000000101201301000000010100'
+def create_keyword_list(survey_string, category_string):
     #진단결과로 추출된 키워드 리스트
     result_keyword_list = []
 
@@ -44,12 +42,8 @@ def create_keyword_list():
                 result_keyword_list.append(keyword_list)
 
 
-    #키워드셋 리스트 출력
-    print(result_keyword_list)
-
-
     #커넥션 종료
     connection.close();
 
-#키워드셋 추출
-create_keyword_list()
+    #키워드셋 리스트 리턴
+    return result_keyword_list

@@ -10,12 +10,12 @@ def create_category_string():
         '''
         # category_string 초기화
         index 0 : 성별,
-        index 1 : 나이대,
-        index 2 : 규칙적인 식사(야식 포함),
+        index 1 : 연령,
+        index 2 : 식습관,
         index 3 : 음주,
         index 4 : 흡연,
-        index 5 : 운동(유산소 운동,무산소 운동),
-        index 6 : 질병(고혈압,당뇨)
+        index 5 : 운동,
+        index 6 : 질병(고혈압,당뇨),
         index 7 : 암(간암,위암,폐암,갑상선암,유방암,기타암)
         '''
         category_string = "11000000"

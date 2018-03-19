@@ -1,12 +1,11 @@
 # -*- coding: utf8 -*-
-
+import sys
 import pymongo
 import json
 from operator import eq
-from pymongo import MongoClient
 
 #커넥션 생성
-connection = MongoClient('localhost', 27017)
+connection = pymongo.MongoClient('localhost', 27017)
 db = connection.Health_One
 
 
@@ -110,8 +109,10 @@ def delete_keyword_list(category, index, scope, keywords):
 
 
 
+if __name__=='__main__':
+    pagerank(sys.argv[1])
 
 #코드 실행
-#print(create_keyword_list('111111111102410311202001000000', '11111111'))
+#print(create_keyword_list('111111111102410311202001000000', '11000000'))
 #insert_keyword_list('성별', 10, '<=13', ['테스트키워드1', '테스트키워드2', '테스트키워드3', '테스트키워드4', '테스트키워드5', '테스트키워드6'])
 #delete_keyword_list('성별', 10, '<=13', ['테스트키워드1', '테스트키워드2', '테스트키워드3', '테스트키워드4'])

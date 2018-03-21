@@ -22,27 +22,33 @@ def category(user_idx, servey_string):
         # category_string 초기화
         category_string = "11000000"
 
-        # 규칙적인 식사 (불규칙적인 식사면)
-        if servey_string[13] != "0" :
-                category_string = category_string[:2] + "1" + category_string[3:]
-        # 음주 (과음이면)
-        if servey_string[16] != "0" :
-                category_string = category_string[:3] + "1" + category_string[4:]
-        # 흡연 (금연 또는 흡연이면)
-        if servey_string[17] != "0" :
-                category_string = category_string[:4] + "1" + category_string[5:]
-        # 운동 (무산소 또는 유산소 운동이 100분 미만, 500분 초과면)
-        if int(servey_string[18:20]) < 10 or int(servey_string[18:20]) > 50 or int(servey_string[20:22]) < 10 or int(servey_string[20:22]) > 50 :
-                category_string = category_string[:5] + "1" + category_string[6:]
-        # 질병 (고혈압 또는 당뇨가 있다면)
-        if servey_string[22:24].find("1") != -1 :
-                category_string = category_string[:6] + "1" + category_string[7:]
-        # 암 (암이 있다면)
-        if servey_string[24:].find("1") != -1 :
-                category_string = category_string[:7] + "1"
+        try:
+            # 규칙적인 식사 (불규칙적인 식사면)
+            if servey_string[13] != "0" :
+                    category_string = category_string[:2] + "1" + category_string[3:]
+            # 음주 (과음이면)
+            if servey_string[16] != "0" :
+                    category_string = category_string[:3] + "1" + category_string[4:]
+            # 흡연 (금연 또는 흡연이면)
+            if servey_string[17] != "0" :
+                    category_string = category_string[:4] + "1" + category_string[5:]
+            # 운동 (무산소 또는 유산소 운동이 100분 미만, 500분 초과면)
+            if int(servey_string[18:20]) < 10 or int(servey_string[18:20]) > 50 or int(servey_string[20:22]) < 10 or int(servey_string[20:22]) > 50 :
+                    category_string = category_string[:5] + "1" + category_string[6:]
+            # 질병 (고혈압 또는 당뇨가 있다면)
+            if servey_string[22:24].find("1") != -1 :
+                    category_string = category_string[:6] + "1" + category_string[7:]
+            # 암 (암이 있다면)
+            if servey_string[24:].find("1") != -1 :
+                    category_string = category_string[:7] + "1"
 
-        # 설문정보 servey컬렉션에 저장
-        serveyc.insert({"user_idx":user_idx,"servey_idx":servey_string[:10],"servey_string":servey_string,"category_string":category_string})
+            # 설문정보 servey컬렉션에 저장
+            serveyc.insert({"user_idx":user_idx,"servey_idx":servey_string[:10],"servey_string":servey_string,"category_string":category_string})
+
+            return category_string
+
+        except:
+            print(False)
 
 
 ###################################################################################################################################################################################

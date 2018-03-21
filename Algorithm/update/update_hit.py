@@ -8,8 +8,14 @@ linkc = db.link
 
 # 조회수 업데이트
 def update_hit(url):
-    link_data = linkc.find_one({"url":url})
-    linkc.update({"url":url},{"$set":{"hit":link_data["hit"]+1}})
+	try:
+	    link_data = linkc.find_one({"url":url})
+	    linkc.update({"url":url},{"$set":{"hit":link_data["hit"]+1}})
+
+	    print(True)
+	
+	except:
+		print(False)
 
 if __name__=='__main__':
     update_hit(sys.argv[1])

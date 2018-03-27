@@ -57,43 +57,49 @@ def keywordset(survey_string, category_string):
                     get_google_search(keyword_list, keyword_title)
 
 
-def get_google_search(keyword_list, keyword_title):
-    #크롤링 URL에 키워드 설정
-    googleUrl = f'https://www.google.co.kr/search?source=hp&q='
-    for keyword in keyword_list[:-1]:
-        googleUrl += (keyword+'OR')
-    googleUrl += (keyword_list[-1])
+def google_search():
+    #인덱스 오름차순으로 각 도큐먼트를 한개씩 조회
+    for doc in db.keyword_set.find().sort('survey_index', pymongo.ASCENDING):
+        id = doc['_id']
+        keyword_title = doc['keyword_title']
+        keyword_list = doc['keyword_list']
 
-    #다음페이지를 위한 for문
-    for pages in range(0,6):
-        geturl=(googleUrl + '&start={pages}0')
-        r = requests.get(geturl, headers=headers, allow_redirects=False)
-        html = r.text
-        soup = bs(html, 'html.parser')
+        #크롤링 URL에 키워드 설정
+        googleUrl = f'https://www.google.co.kr/search?source=hp&q='
+        for keyword in keyword_list[:-1]:
+            googleUrl += (keyword+'OR')
+        googleUrl += (keyword_list[-1])
 
-        titles = soup.select('h3.r')
-        no = 1
-        print(geturl)
-        for title in titles:
-            try:
-                date = dt.strftime("%Y %B %d.")
-                link = title.a['href']
-                a = link.find('http:/')
-                b = link.find('&')
+        #다음페이지를 위한 for문
+        for pages in range(0,6):
+            geturl=(googleUrl + '&start={pages}0')
+            r = requests.get(geturl, headers=headers, allow_redirects=False)
+            html = r.text
+            soup = bs(html, 'html.parser')
 
-                link2 = link[a:b]
-                no = no + 1
-                r2 = requests.get(link2)
-                html2 = r2.text
-                soup2 = bs(html2, 'html.parser')
-                w = soup2
-                w2 = str(w)
-                w3 = w2.count(keyword_title)
+            titles = soup.select('h3.r')
+            no = 1
+            print(geturl)
+            for title in titles:
+                try:
+                    date = dt.strftime("%Y-%m-%d")
+                    link = title.a['href']
+                    a = link.find('http:/')
+                    b = link.find('&')
 
-                db.link.insert({"no":no, "title":title.text, "url":link2, "key_score":w3, "date":date})
-            except:
-                print("could not open %s" % title)
-                continue
+                    link2 = link[a:b]
+                    no = no + 1
+                    r2 = requests.get(link2)
+                    html2 = r2.text
+                    soup2 = bs(html2, 'html.parser')
+                    w = soup2
+                    w2 = str(w)
+                    w3 = w2.count(keyword_title)
+
+                    db.link.insert({"no":no, "title":title.text, "url":link2, "key_score":w3, "date":date, "keyword_title_id":id, "hit":0, "pheromone":1.0})
+                except:
+                    print("could not open %s" % title)
+                    continue
 
 def get_word_count(url, query):
     r2 = requests.get(url)
@@ -106,4 +112,4 @@ def get_word_count(url, query):
 
 #if __name__=='__main__':
 #    keywordset(sys.argv[1], sys.argv[2])
-keywordset('000000000011111111111111111111', '11000000')
+google_search()

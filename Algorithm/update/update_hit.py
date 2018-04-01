@@ -12,10 +12,12 @@ def update_hit(url):
 	    link_data = linkc.find_one({"url":url})
 	    linkc.update({"url":url},{"$set":{"hit":link_data["hit"]+1}})
 
-	    print(True)
-	
+	    print({'code' : 100, 'msg' : "True"})
+	    return {'code' : 100, 'msg' : "True"}
+
 	except:
-		print(False)
+		print({'code' : 1, 'msg' : "False", 'url' : url})
+	    #return {'code' : 1, 'msg' : "False", 'url' : url}
 
 if __name__=='__main__':
     update_hit(sys.argv[1])

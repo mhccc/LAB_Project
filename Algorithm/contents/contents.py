@@ -75,6 +75,7 @@ def contents(survey_string, category_string):
         return {'code': 1, 'msg': 'False'}
 
 
+contents('000000000102410311202001000000', '11001010')
 
-if __name__=='__main__':
-    contents(sys.argv[1], sys.argv[2])
+#if __name__=='__main__':
+#    contents(sys.argv[1], sys.argv[2])

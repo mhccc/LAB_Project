@@ -25,49 +25,53 @@ def get_google_search():
             keyword_title = keywordset_doc['keyword_title']
             keyword_title_id = keywordset_doc['_id']
 
-
             googleUrl = f'https://www.google.co.kr/search?source=hp&q='
             for keyword in keyword_list:
-                googleUrl += (keyword + 'OR')
-            googleUrl = googleUrl[:-2]
-
-            print(googleUrl)
+                googleUrl += (keyword+'OR')
+            googleUrl += (keyword)
 
             for pages in range(0,6): #다음페이지를 위한 for문
-                geturl = (googleUrl+'&start={pages}0') #크롤링할 url설정
-                r = requests.get(geturl, headers=headers, allow_redirects=False) #header를 적용한 크롤링 r에 저장
+                geturl=(googleUrl+'&start={pages}0') #크롤링할 url설정
+                r=requests.get(geturl, headers=headers, allow_redirects=False) #header를 적용한 크롤링 r에 저장
                 html = r.text
                 soup = bs(html, 'html.parser') # 25-26 크롤링 구문
 
-                titles = soup.select('h3.r') #주요 검색 부분인 h3, r태그 저장
+                titles=soup.select('h3.r') #주요 검색 부분인 h3, r태그 저장
 
+                print(geturl)
                 for title in titles: #각 부분별 크롤링(하나의 링크마다 반복됨)
                     try:
                         date = dt.strftime("%Y-%m-%d") #날짜
                         link = title.a['href']
-                        a = link.find('http:/')
-                        b = link.find('&')
-                        link2 = link[a:b] #34-37 크롤링된 링크url중 불필요 부분 제거
+                        a=link.find('http:/')
+                        b=link.find('&')
+                        link2=link[a:b] #34-37 크롤링된 링크url중 불필요 부분 제거
 
                         r2 = requests.get(link2)
                         html2 = r2.text
                         soup2 = bs(html2, 'html.parser')
                         w = soup2
-                        w2 = str(w) #단어카운팅을 위한 부분
-                        w3 = w2.count(keyword_title)
-                        #collection.save({"title":title.text,"url":link2,"key_score":w3,"date":date, 'keyword_title_id': keyword_title_id,  'hit': 1, 'pheromone': 1.0})
+                        w2=str(w) #단어카운팅을 위한 부분
+                        w3=w2.count(keyword_title)
+                        #collection.findOneAndUpdate({"title":title.text,"url":link2,"key_score":w3,"date":date}, upsert=True)
                         check = collection.find_one({"url":link2})
-                        if check == None:
-                            #DB 삽입
+                        check2 = check['url']
+                        if check2 != link2:
+                            collection.insert({'title': title.text, 'url': link2, 'key_score': w3, 'date': date, 'keyword_title_id': keyword_title_id,  'hit': 1, 'pheromone': 1.0})    #findOneAndUpdate오류 발생시 사용
+                        print(check2)
+                        print(title.text)
+                        print(link2)
+                        print(w2.count(keyword_title))
+                        print(date)
 
                     except:
+                        print("could not open %s" % title)
                         continue
 
         print({'code': 100, 'msg': "크롤링이 완료되었습니다."})
-
+        
     except:
         print({'code': 1, 'msg': "오류가 발생하였습니다."})
-
 def get_word_count(url,query):
     r2 = requests.get(url)
     html2 = r2.text
@@ -75,6 +79,8 @@ def get_word_count(url,query):
     w = soup2
     w.count(query)
 
-
 if __name__=='__main__':
+    #for keywordset_doc in db.keyword_set.find().sort('survey_index',pymongo.ASCENDING):
+     #   keyword_list = keywordset_doc['keyword_list']
+      #  keyword_title = keywordset_doc['keyword_title']
     get_google_search()

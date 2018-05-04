@@ -19,8 +19,6 @@ def extract(scope):
 def contents(survey_string, category_string):
     #추출된 pagerank 도큐먼트를 저장할 리스트
     pagerank_docs = []
-    #link 도큐먼트를 저장할 딕셔너리
-    link_doc = {}
     #link 도큐먼트들의 리스트를 저장할 리스트를
     result = []
 
@@ -54,6 +52,8 @@ def contents(survey_string, category_string):
 
         #각 pagerank 도큐먼트가 담고있는 link들의 정보를 link 컬렉션에서 추출하여 JSON 형태로 반환
         for pagerank_doc in pagerank_docs:
+            #link 도큐먼트를 저장할 딕셔너리
+            link_doc = {}
             link_doc['id'] = pagerank_doc['_id']
             link_doc['keyword_title'] = db.keyword_set.find_one({'_id':pagerank_doc['keyword_title_id']})['keyword_title']
             link_doc['new1'] = db.link.find_one({'_id':pagerank_doc['new1_id']}, {'_id':0, 'title':1, 'url':1, 'hit':1})
@@ -66,16 +66,16 @@ def contents(survey_string, category_string):
             link_doc['ran1'] = db.link.find_one({'_id':pagerank_doc['ran1_id']}, {'_id':0, 'title':1, 'url':1, 'hit':1})
             link_doc['ran2'] = db.link.find_one({'_id':pagerank_doc['ran2_id']}, {'_id':0, 'title':1, 'url':1, 'hit':1})
             result.append(link_doc)
+            print(link_doc['keyword_title'])
 
         print({'code': 100, 'msg': 'True', 'result': result})
         return {'code' : 100, 'msg' : 'True', 'result': result}
 
-    except:
+    except Exception as e:
+        print(e)
         print({'code': 1, 'msg': 'False'})
         return {'code': 1, 'msg': 'False'}
 
 
-contents('000000000102410311202001000000', '11001010')
-
-#if __name__=='__main__':
-#    contents(sys.argv[1], sys.argv[2])
+if __name__=='__main__':
+    contents(sys.argv[1], sys.argv[2])

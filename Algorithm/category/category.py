@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import sys
 import pymongo
+import datetime
 
 connection = pymongo.MongoClient("localhost",27017)
 db = connection.Health_One
@@ -54,7 +55,7 @@ def category(user_idx, survey_string):
                         category_string = category_string[:7] + "1"
 
                 # 설문정보 survey컬렉션에 저장
-                surveyc.insert({"user_idx":user_idx,"survey_idx":survey_string[:10],"survey_string":survey_string,"category_string":category_string})
+                surveyc.insert({"user_idx":user_idx,"survey_idx":survey_string[:10],"survey_string":survey_string,"category_string":category_string,"date":datetime.datetime.now()})
 
                 print({'code' : 100, 'msg' : "True", 'category_string' : category_string})
                 return {'code' : 100, 'msg' : "True", 'category_string' : category_string}
@@ -83,3 +84,4 @@ if __name__=='__main__':
         except:
             print({'code' : 4, 'msg' : "오류가 발생하였습니다."})
             #return {'code' : 4, 'msg' : "오류가 발생하였습니다."}
+            

@@ -55,10 +55,10 @@ def get_google_search():
                         w3=w2.count(keyword_title)
                         #collection.findOneAndUpdate({"title":title.text,"url":link2,"key_score":w3,"date":date}, upsert=True)
                         check = collection.find_one({"url":link2})
-                        if check != link2:
-                            collection.insert({'title': title.text, 'url': link2, 'key_score': w3, 'date': date, 'keyword_title_id': keyword_title_id,  'hit': 1, 'pheromone': 1.0, 'pheromone_m':0.0})    #findOneAndUpdate오류 발생시 사용
+                        if check == link2:
+                            continue
                         elif check == None:
-                            collection.insert({'title': title.text, 'url': link2, 'key_score': w3, 'date': date,'keyword_title_id': keyword_title_id, 'hit': 1, 'pheromone': 1.0, 'pheromone_m':0.0, 'pheromone_m':0.0})
+                            collection.insert({'title': title.text, 'url': link2, 'key_score': w3, 'date': date,'keyword_title_id': keyword_title_id, 'hit': 0, 'like': 0, 'pheromone': 1.0})
                         print(check)
                         print(title.text)
                         print(link2)

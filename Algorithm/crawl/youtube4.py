@@ -32,8 +32,8 @@ def get_youtube_search():
                 video_src=link.find('h3').find('a')['href']
                 date = dt.strftime("%Y-%m-%d")
                 youtube_check = collection.find_one({"url":video_src})
-                if youtube_check != video_src:
-                    collection.insert({'title':title,'url':video_src,'img_src':img_src,'date': date, 'keyword_title_id': keyword_title_id,'keyword_title':keyword_title, 'pheromone_m':0.0})
+                if youtube_check == video_src:
+                    continue
                 elif youtube_check == None:
                     collection.insert({'title': title, 'url': video_src, 'img_src': img_src, 'date': date,'keyword_title_id': keyword_title_id, 'keyword_title': keyword_title, 'pheromone_m':0.0})
                 print(title)

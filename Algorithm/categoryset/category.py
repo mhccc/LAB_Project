@@ -76,6 +76,7 @@ if __name__=='__main__':
     try:
         if sys.argv[3] != "":
             print({'code' : 4, 'msg' : "오류가 발생하였습니다."})
+            #return {'code' : 4, 'msg' : "오류가 발생하였습니다."}
 
     except:
         try:
